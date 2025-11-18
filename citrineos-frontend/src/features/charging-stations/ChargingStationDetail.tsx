@@ -1,11 +1,11 @@
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import { useParams, useNavigate } from 'react-router-dom';
+
 import {
   Box,
   Card,
   CardContent,
   Typography,
-  Grid,
   Chip,
   CircularProgress,
   Alert,
@@ -27,6 +27,7 @@ import {
   Refresh,
 } from '@mui/icons-material';
 import { GET_CHARGING_STATION } from '../../graphql/queries/chargingStations';
+import type { ChargingStationByPkData } from '../../types/graphql';
 import { format } from 'date-fns';
 import { useState } from 'react';
 
@@ -47,7 +48,7 @@ export const ChargingStationDetail = () => {
   const navigate = useNavigate();
   const [tabValue, setTabValue] = useState(0);
 
-  const { data, loading, error, refetch } = useQuery(GET_CHARGING_STATION, {
+  const { data, loading, error, refetch } = useQuery<ChargingStationByPkData>(GET_CHARGING_STATION, {
     variables: { id },
     skip: !id,
     pollInterval: 5000,
@@ -96,84 +97,84 @@ export const ChargingStationDetail = () => {
           <Typography variant="h6" gutterBottom>
             Station Information
           </Typography>
-          <Grid container spacing={3} sx={{ mt: 1 }}>
-            <Grid item xs={12} sm={6} md={3}>
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mt: 1 }}>
+            <Box>
               <Typography variant="caption" color="textSecondary">
                 Vendor
               </Typography>
               <Typography variant="body1">{station.chargePointVendor || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            </Box>
+            <Box>
               <Typography variant="caption" color="textSecondary">
                 Model
               </Typography>
               <Typography variant="body1">{station.chargePointModel || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            </Box>
+            <Box>
               <Typography variant="caption" color="textSecondary">
                 Protocol
               </Typography>
               <Typography variant="body1">{station.protocol || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            </Box>
+            <Box>
               <Typography variant="caption" color="textSecondary">
                 Firmware Version
               </Typography>
               <Typography variant="body1">{station.firmwareVersion || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            </Box>
+            <Box>
               <Typography variant="caption" color="textSecondary">
                 Charge Point Serial
               </Typography>
               <Typography variant="body1">{station.chargePointSerialNumber || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            </Box>
+            <Box>
               <Typography variant="caption" color="textSecondary">
                 Charge Box Serial
               </Typography>
               <Typography variant="body1">{station.chargeBoxSerialNumber || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            </Box>
+            <Box>
               <Typography variant="caption" color="textSecondary">
                 ICCID
               </Typography>
               <Typography variant="body1">{station.iccid || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            </Box>
+            <Box>
               <Typography variant="caption" color="textSecondary">
                 IMSI
               </Typography>
               <Typography variant="body1">{station.imsi || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            </Box>
+            <Box>
               <Typography variant="caption" color="textSecondary">
                 Meter Type
               </Typography>
               <Typography variant="body1">{station.meterType || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            </Box>
+            <Box>
               <Typography variant="caption" color="textSecondary">
                 Meter Serial
               </Typography>
               <Typography variant="body1">{station.meterSerialNumber || '-'}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            </Box>
+            <Box>
               <Typography variant="caption" color="textSecondary">
                 Created At
               </Typography>
               <Typography variant="body1">
                 {format(new Date(station.createdAt), 'MMM dd, yyyy HH:mm')}
               </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            </Box>
+            <Box>
               <Typography variant="caption" color="textSecondary">
                 Updated At
               </Typography>
               <Typography variant="body1">
                 {format(new Date(station.updatedAt), 'MMM dd, yyyy HH:mm')}
               </Typography>
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
 
           {station.location && (
             <>
@@ -181,32 +182,32 @@ export const ChargingStationDetail = () => {
               <Typography variant="h6" gutterBottom>
                 Location
               </Typography>
-              <Grid container spacing={3} sx={{ mt: 1 }}>
-                <Grid item xs={12} sm={6} md={3}>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }, gap: 3, mt: 1 }}>
+                <Box>
                   <Typography variant="caption" color="textSecondary">
                     Name
                   </Typography>
                   <Typography variant="body1">{station.location.name}</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                </Box>
+                <Box>
                   <Typography variant="caption" color="textSecondary">
                     Address
                   </Typography>
                   <Typography variant="body1">{station.location.address || '-'}</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                </Box>
+                <Box>
                   <Typography variant="caption" color="textSecondary">
                     City
                   </Typography>
                   <Typography variant="body1">{station.location.city || '-'}</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6} md={3}>
+                </Box>
+                <Box>
                   <Typography variant="caption" color="textSecondary">
                     Country
                   </Typography>
                   <Typography variant="body1">{station.location.country || '-'}</Typography>
-                </Grid>
-              </Grid>
+                </Box>
+              </Box>
             </>
           )}
         </CardContent>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import {
   Box,
   Card,
@@ -26,11 +26,11 @@ import {
   Search,
   Visibility,
   Refresh,
-  FilterList,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { GET_TRANSACTIONS } from '../../graphql/queries/transactions';
-import { Transaction } from '../../types';
+import type { TransactionsData } from '../../types/graphql';
+import type { Transaction } from '../../types';
 import { format } from 'date-fns';
 
 type FilterType = 'all' | 'active' | 'completed';
@@ -61,7 +61,7 @@ export const TransactionsList = () => {
     return conditions;
   };
 
-  const { data, loading, error, refetch } = useQuery(GET_TRANSACTIONS, {
+  const { data, loading, error, refetch } = useQuery<TransactionsData>(GET_TRANSACTIONS, {
     variables: {
       limit: rowsPerPage,
       offset: page * rowsPerPage,

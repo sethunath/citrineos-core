@@ -64,12 +64,12 @@ export const apolloClient = new ApolloClient({
       Query: {
         fields: {
           ChargingStations: {
-            merge(existing, incoming) {
+            merge(_existing, incoming) {
               return incoming;
             },
           },
           Transactions: {
-            merge(existing, incoming) {
+            merge(_existing, incoming) {
               return incoming;
             },
           },

@@ -37,7 +37,6 @@ import {
 } from '@mui/icons-material';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
-import { config } from '../../config/config';
 
 const drawerWidth = 280;
 

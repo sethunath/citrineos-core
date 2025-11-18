@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 import {
   Box,
   Card,
@@ -28,7 +28,8 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { GET_CHARGING_STATIONS } from '../../graphql/queries/chargingStations';
-import { ChargingStation } from '../../types';
+import type { ChargingStation } from '../../types';
+import type { ChargingStationsData } from '../../types/graphql';
 import { format } from 'date-fns';
 
 export const ChargingStationsList = () => {
@@ -37,7 +38,7 @@ export const ChargingStationsList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [searchTerm, setSearchTerm] = useState('');
 
-  const { data, loading, error, refetch } = useQuery(GET_CHARGING_STATIONS, {
+  const { data, loading, error, refetch } = useQuery<ChargingStationsData>(GET_CHARGING_STATIONS, {
     variables: {
       limit: rowsPerPage,
       offset: page * rowsPerPage,

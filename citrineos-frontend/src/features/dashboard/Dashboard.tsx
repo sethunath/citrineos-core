@@ -1,9 +1,9 @@
-import { useQuery, useSubscription } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client/react';
+import { Stack } from '@mui/material';
 import {
   Box,
   Card,
   CardContent,
-  Grid,
   Typography,
   CircularProgress,
   Alert,
@@ -16,12 +16,12 @@ import {
   BoltOutlined,
   TrendingUp,
   CheckCircle,
-  Cancel,
 } from '@mui/icons-material';
 import { GET_CHARGING_STATIONS_STATS } from '../../graphql/queries/chargingStations';
 import { GET_ACTIVE_TRANSACTIONS } from '../../graphql/queries/transactions';
 import { SUBSCRIBE_CHARGING_STATIONS } from '../../graphql/queries/chargingStations';
 import { SUBSCRIBE_TRANSACTIONS } from '../../graphql/queries/transactions';
+import type { ChargingStationsStatsData, ActiveTransactionsData } from '../../types/graphql';
 import { formatDistanceToNow } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { useState, useEffect } from 'react';
@@ -70,15 +70,15 @@ const StatCard = ({ title, value, icon, color, subtitle }: StatCardProps) => (
 );
 
 export const Dashboard = () => {
-  const { data: stationsData, loading: stationsLoading, error: stationsError } = useQuery(GET_CHARGING_STATIONS_STATS);
-  const { data: transactionsData, loading: transactionsLoading } = useQuery(GET_ACTIVE_TRANSACTIONS);
+  const { data: stationsData, loading: stationsLoading, error: stationsError } = useQuery<ChargingStationsStatsData>(GET_CHARGING_STATIONS_STATS);
+  const { data: transactionsData, loading: transactionsLoading } = useQuery<ActiveTransactionsData>(GET_ACTIVE_TRANSACTIONS);
 
   // Subscribe to real-time updates
-  const { data: stationsSubscription } = useSubscription(SUBSCRIBE_CHARGING_STATIONS, {
+  useSubscription(SUBSCRIBE_CHARGING_STATIONS, {
     variables: { where: {} },
   });
 
-  const { data: transactionsSubscription } = useSubscription(SUBSCRIBE_TRANSACTIONS, {
+  useSubscription(SUBSCRIBE_TRANSACTIONS, {
     variables: { where: { isActive: { _eq: true } } },
   });
 
@@ -137,9 +137,9 @@ export const Dashboard = () => {
         Dashboard
       </Typography>
 
-      <Grid container spacing={3}>
+      <Stack spacing={3}>
         {/* Statistics Cards */}
-        <Grid item xs={12} sm={6} md={3}>
+        <Box>
           <StatCard
             title="Total Stations"
             value={totalStations}
@@ -147,8 +147,8 @@ export const Dashboard = () => {
             color="primary"
             subtitle={`${onlineStations} online, ${offlineStations} offline`}
           />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        </Box>
+        <Box>
           <StatCard
             title="Active Sessions"
             value={activeTransactions}
@@ -156,8 +156,8 @@ export const Dashboard = () => {
             color="success"
             subtitle="Charging now"
           />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        </Box>
+        <Box>
           <StatCard
             title="Energy (kWh)"
             value={totalEnergy.toFixed(2)}
@@ -165,8 +165,8 @@ export const Dashboard = () => {
             color="warning"
             subtitle="Active sessions"
           />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        </Box>
+        <Box>
           <StatCard
             title="Revenue"
             value={`$${totalRevenue.toFixed(2)}`}
@@ -174,10 +174,10 @@ export const Dashboard = () => {
             color="info"
             subtitle="Active sessions"
           />
-        </Grid>
+        </Box>
 
         {/* Station Status Chart */}
-        <Grid item xs={12} md={4}>
+        <Box sx={{ flex: 1 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -204,10 +204,10 @@ export const Dashboard = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
-        </Grid>
+        </Box>
 
         {/* Energy Consumption Chart */}
-        <Grid item xs={12} md={8}>
+        <Box sx={{ flex: 2 }}>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -230,19 +230,19 @@ export const Dashboard = () => {
               </ResponsiveContainer>
             </CardContent>
           </Card>
-        </Grid>
+        </Box>
 
         {/* Recent Active Transactions */}
-        <Grid item xs={12}>
+        <Box>
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
                 Active Charging Sessions
               </Typography>
-              {transactionsData?.Transactions?.length > 0 ? (
-                <Grid container spacing={2} sx={{ mt: 1 }}>
+              {transactionsData?.Transactions && transactionsData.Transactions.length > 0 ? (
+                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mt: 1 }}>
                   {transactionsData.Transactions.slice(0, 6).map((transaction: any) => (
-                    <Grid item xs={12} sm={6} md={4} key={transaction.id}>
+                    <Box key={transaction.id} sx={{ flex: '1 1 300px' }}>
                       <Paper variant="outlined" sx={{ p: 2 }}>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                           <Typography variant="subtitle2" noWrap>
@@ -283,9 +283,9 @@ export const Dashboard = () => {
                           Started {formatDistanceToNow(new Date(transaction.createdAt))} ago
                         </Typography>
                       </Paper>
-                    </Grid>
+                    </Box>
                   ))}
-                </Grid>
+                </Box>
               ) : (
                 <Typography variant="body2" color="textSecondary" sx={{ py: 4, textAlign: 'center' }}>
                   No active charging sessions
@@ -293,8 +293,8 @@ export const Dashboard = () => {
               )}
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
+        </Box>
+      </Stack>
     </Box>
   );
 };

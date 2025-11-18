@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ApolloProvider } from '@apollo/client';
+import { ApolloProvider } from '@apollo/client/react';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { apolloClient } from './config/apolloClient';
 import { Login } from './components/auth/Login';
